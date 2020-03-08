@@ -104,6 +104,7 @@ class CollectionViewSet(api_base.GenericViewSet):
 
 
 class CollectionVersionViewSet(api_base.GenericViewSet):
+    serializer_class = serializers.CollectionVersionSerializer
 
     def list(self, request, *args, **kwargs):
         self.paginator.init_from_request(request)

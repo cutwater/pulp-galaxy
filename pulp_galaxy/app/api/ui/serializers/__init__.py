@@ -16,9 +16,9 @@ from .namespace import (
     NamespaceUpdateSerializer
 )
 
-# from .current_user import (
-#     CurrentUserSerializer
-# )
+from .current_user import (
+    CurrentUserSerializer
+)
 
 
 __all__ = (
@@ -33,5 +33,5 @@ __all__ = (
     'NamespaceSerializer',
     'NamespaceSummarySerializer',
     'NamespaceUpdateSerializer',
-    # 'CurrentUserSerializer'
+    'CurrentUserSerializer'
 )
