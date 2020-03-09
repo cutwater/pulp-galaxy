@@ -43,8 +43,8 @@ fi
 
 ./generate.sh pulpcore python
 pip install ./pulpcore-client
-# ./generate.sh pulp_galaxy python
-# pip install ./pulp_galaxy-client
+./generate.sh pulp_galaxy python
+pip install ./pulp_galaxy-client
 
 cd $TRAVIS_BUILD_DIR
 

@@ -16,12 +16,6 @@ from pulp_galaxy.tests.functional.utils import (
 )
 from pulp_galaxy.tests.functional.utils import set_up_module as setUpModule  # noqa:F401
 
-# from pulpcore.client.pulp_galaxy import (
-#     RepositoriesGalaxyApi,
-#     RepositorySyncURL,
-#     RemotesGalaxyApi,
-# )
-
 
 # Implement sync support before enabling this test.
 @unittest.skip("FIXME: plugin writer action required")

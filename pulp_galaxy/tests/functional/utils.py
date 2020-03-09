@@ -32,7 +32,7 @@ from pulpcore.client.pulpcore import (
     Configuration,
     TasksApi,
 )
-# from pulpcore.client.pulp_galaxy import ApiClient as GalaxyApiClient
+from pulpcore.client.pulp_galaxy import ApiClient as GalaxyApiClient
 
 
 configuration = Configuration()

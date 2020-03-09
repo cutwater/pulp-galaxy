@@ -17,15 +17,6 @@ from pulp_galaxy.tests.functional.utils import (
 )
 from pulp_galaxy.tests.functional.utils import set_up_module as setUpModule  # noqa:F401
 
-# from pulpcore.client.pulp_galaxy import (
-#     DistributionsGalaxyApi,
-#     PublicationsGalaxyApi,
-#     RepositoriesGalaxyApi,
-#     RepositorySyncURL,
-#     RemotesGalaxyApi,
-#     GalaxyGalaxyPublication,
-# )
-
 
 # Implement tests.functional.utils.get_galaxy_content_unit_paths(),
 # as well as sync and publish support before enabling this test.

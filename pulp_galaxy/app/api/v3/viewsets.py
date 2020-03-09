@@ -11,10 +11,11 @@ from rest_framework.exceptions import APIException, NotFound
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-import galaxy_pulp
+from pulpcore import client as bindings_client
 import requests
 
 from pulp_galaxy.app.api import base as api_base
+from pulp_galaxy.app.api.ui import serializers
 from pulp_galaxy.app.api.v3.serializers import CollectionSerializer, CollectionUploadSerializer
 from pulp_galaxy.app.common import pulp
 from pulp_galaxy.app.common import metrics
@@ -41,13 +42,13 @@ class CollectionViewSet(api_base.GenericViewSet):
             'limit': self.paginator.limit,
         })
 
-        api = galaxy_pulp.GalaxyCollectionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyCollectionsApi(pulp.get_client())
         response = api.list(prefix=settings.X_PULP_API_PREFIX, **params)
         data = list(map(self._fix_item_urls, response.results))
         return self.paginator.paginate_proxy_response(data, response.count)
 
     def retrieve(self, request, *args, **kwargs):
-        api = galaxy_pulp.GalaxyCollectionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyCollectionsApi(pulp.get_client())
 
         response = api.get(
             prefix=settings.X_PULP_API_PREFIX,
@@ -69,9 +70,9 @@ class CollectionViewSet(api_base.GenericViewSet):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        collection = galaxy_pulp.models.Collection(deprecated=data.get('deprecated', False))
+        collection = bindings_client.pulp_galaxy.models.Collection(deprecated=data.get('deprecated', False))
 
-        api = galaxy_pulp.GalaxyCollectionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyCollectionsApi(pulp.get_client())
 
         response = api.put(
             prefix=settings.X_PULP_API_PREFIX,
@@ -116,7 +117,7 @@ class CollectionVersionViewSet(api_base.GenericViewSet):
             'certification': constants.CertificationStatus.CERTIFIED.value
         })
 
-        api = galaxy_pulp.GalaxyCollectionVersionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyCollectionVersionsApi(pulp.get_client())
         response = api.list(
             prefix=settings.X_PULP_API_PREFIX,
             namespace=self.kwargs['namespace'],
@@ -132,7 +133,7 @@ class CollectionVersionViewSet(api_base.GenericViewSet):
         return self.paginator.paginate_proxy_response(response.results, response.count)
 
     def retrieve(self, request, *args, **kwargs):
-        api = galaxy_pulp.GalaxyCollectionVersionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyCollectionVersionsApi(pulp.get_client())
         response = api.get(
             prefix=settings.X_PULP_API_PREFIX,
             namespace=self.kwargs['namespace'],
@@ -180,7 +181,7 @@ class CollectionVersionViewSet(api_base.GenericViewSet):
 class CollectionImportViewSet(api_base.ViewSet):
 
     def retrieve(self, request, pk):
-        api = galaxy_pulp.GalaxyImportsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyImportsApi(pulp.get_client())
         response = api.get(prefix=settings.X_PULP_API_PREFIX, id=pk)
         return Response(response.to_dict())
 
@@ -227,7 +228,7 @@ class CollectionArtifactUploadView(api_base.APIView):
                 headers=headers,
                 post_params=post_params,
             )
-        except galaxy_pulp.ApiException:
+        except bindings_client.pulp_galaxy.ApiException:
             log.exception('Failed to publish artifact %s (namespace=%s, sha256=%s) to pulp at url=%s',  # noqa
                           data['file'].name, namespace, data.get('sha256'), url)
             raise

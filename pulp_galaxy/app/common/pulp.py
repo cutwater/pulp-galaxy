@@ -1,5 +1,6 @@
 from django.conf import settings
-from galaxy_pulp import Configuration, ApiClient
+from pulpcore.client.pulpcore import Configuration
+from pulpcore import client as bindings_client
 
 
 def get_configuration():
@@ -18,4 +19,4 @@ def get_configuration():
 
 def get_client():
     config = get_configuration()
-    return ApiClient(configuration=config)
+    return bindings_client.pulp_galaxy.ApiClient(configuration=config)

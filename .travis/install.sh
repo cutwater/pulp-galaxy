@@ -74,7 +74,6 @@ images:
       tag: $TAG
       pulpcore: ./pulpcore
       plugins:
-        - ./pulp_galaxy/bindings/galaxy-pulp
         - ./pulp_galaxy
         - $PULP_ANSIBLE
 VARSYAML

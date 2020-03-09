@@ -1,4 +1,4 @@
-import galaxy_pulp
+from pulpcore import client as bindings_client
 from django.conf import settings
 from django_filters import filters
 from django_filters.rest_framework import filterset, DjangoFilterBackend, OrderingFilter
@@ -35,7 +35,7 @@ class CollectionViewSet(api_base.ViewSet):
             else:
                 params[key] = value
 
-        api = galaxy_pulp.PulpCollectionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.PulpCollectionsApi(pulp.get_client())
 
         response = api.list(
             is_highest=True,
@@ -60,7 +60,7 @@ class CollectionViewSet(api_base.ViewSet):
 
         version = params_dict.get('version', '')
 
-        api = galaxy_pulp.PulpCollectionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.PulpCollectionsApi(pulp.get_client())
 
         params = {
             'namespace': namespace,
@@ -140,7 +140,7 @@ class CollectionVersionViewSet(api_base.GenericViewSet):
             params['ordering'] = params.get('sort')
             del params['sort']
 
-        api = galaxy_pulp.PulpCollectionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.PulpCollectionsApi(pulp.get_client())
         response = api.list(exclude_fields='docs_blob', **params)
 
         data = serializers.CollectionVersionSerializer(response.results, many=True).data
@@ -151,7 +151,7 @@ class CollectionVersionViewSet(api_base.GenericViewSet):
     def retrieve(self, request, *args, **kwargs):
         namespace, name, version = self.kwargs['version'].split('/')
 
-        api = galaxy_pulp.PulpCollectionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.PulpCollectionsApi(pulp.get_client())
         response = api.list(namespace=namespace, name=name, version=version, limit=1)
 
         if not response.results:
@@ -174,7 +174,7 @@ class CollectionVersionViewSet(api_base.GenericViewSet):
         namespace_obj = get_object_or_404(models.Namespace, name=namespace)
         self.check_object_permissions(request, namespace_obj)
 
-        api = galaxy_pulp.GalaxyCollectionVersionsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyCollectionVersionsApi(pulp.get_client())
         serializer = serializers.CertificationSerializer(
             data=request.data,
             context={'request': request})
@@ -186,7 +186,7 @@ class CollectionVersionViewSet(api_base.GenericViewSet):
             namespace=namespace,
             name=name,
             version=version,
-            certification_info=galaxy_pulp.CertificationInfo(certification),
+            certification_info=bindings_client.pulp_galaxy.CertificationInfo(certification),
         )
         return Response(response)
 
@@ -218,7 +218,7 @@ class CollectionImportViewSet(api_base.GenericViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
 
-        api = galaxy_pulp.GalaxyImportsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyImportsApi(pulp.get_client())
 
         results = []
         for task in page:
@@ -230,7 +230,7 @@ class CollectionImportViewSet(api_base.GenericViewSet):
     @swagger_auto_schema(operation_summary="Retrieve collection import",
                          responses={200: serializers.ImportTaskDetailSerializer})
     def retrieve(self, request, *args, **kwargs):
-        api = galaxy_pulp.GalaxyImportsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.GalaxyImportsApi(pulp.get_client())
         task = self.get_object()
         task_info = api.get(prefix=settings.X_PULP_API_PREFIX, id=self.kwargs['task_id'])
         data = serializers.ImportTaskDetailSerializer(task_info, context={'task_obj': task}).data

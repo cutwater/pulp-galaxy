@@ -1,4 +1,4 @@
-import galaxy_pulp
+from pulpcore import client as bindings_client
 
 from pulp_ansible.app.serializers import TagSerializer
 
@@ -18,7 +18,7 @@ class TagsViewSet(api_base.GenericViewSet):
             'limit': self.paginator.limit,
         })
 
-        api = galaxy_pulp.PulpTagsApi(pulp.get_client())
+        api = bindings_client.pulp_galaxy.PulpTagsApi(pulp.get_client())
         response = api.list(**params)
 
         return self.paginator.paginate_proxy_response(response.results, response.count)

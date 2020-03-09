@@ -1,6 +1,6 @@
-import galaxy_pulp
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
+from pulpcore.client import pulpcore as pulpcore_client
 
 from rest_framework import exceptions
 from rest_framework.response import Response
@@ -58,10 +58,10 @@ def _handle_openapi_exception(exc, context=None):
 
 def exception_handler(exc, context):
     """Custom exception handler."""
-    if isinstance(exc, galaxy_pulp.ApiException):
+    if isinstance(exc, pulpcore_client.ApiException):
         return _handle_api_client_exception(exc)
 
-    if isinstance(exc, galaxy_pulp.OpenApiException):
+    if isinstance(exc, pulpcore_client.OpenApiException):
         return _handle_openapi_exception(exc, context)
 
     if isinstance(exc, Http404):
